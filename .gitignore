@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+output/
+models/
+*.wav
+*.m4a
+*.mp3
+*.mp4
+.env*
+dist/

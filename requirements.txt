@@ -1,0 +1,3 @@
+faster-whisper==1.2.1
+av==16.1.0
+casts-down @ https://github.com/host452b/casts_down/archive/refs/tags/v2.4.0.zip
