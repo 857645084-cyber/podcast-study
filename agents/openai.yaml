@@ -1,4 +1,4 @@
 interface:
   display_name: "播客学习整理"
-  short_description: "本地转写播客并整理学习笔记，保留案例与时间戳，支持中断后继续处理"
-  default_prompt: "使用 $podcast-study 将这期播客整理成带时间戳依据的学习笔记，区分主讲观点和 AI 解读。"
+  short_description: "独立运行本地转写，完成后按需整理章节笔记，复用已有结果减少重复阅读"
+  default_prompt: "使用 $podcast-study 启动这期的独立本地转写，完成后我回来指定章节整理学习笔记。"

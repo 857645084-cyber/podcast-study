@@ -1,5 +1,24 @@
 # 播客学习整理 / Podcast Study
 
+## v0.2：省额度的默认流程
+
+转写在独立的本地进程中运行。Agent 启动任务后结束本轮聊天，用户完成后回来指定主题或章节。没有自动通知或自动生成笔记；电脑需保持运行。在线阅读与生成仍会消耗额度，不承诺固定节省比例。
+
+```powershell
+# 启动后立即返回；模型可以换成本地模型目录
+.\.venv\Scripts\python.exe scripts/workflow.py start "C:\Audio\episode.m4a" --out "output\episode" --model small
+# 以后按需查看进度
+.\.venv\Scripts\python.exe scripts/workflow.py status --out "output\episode"
+# 完成后本地定位关键词，只返回少量上下文
+.\.venv\Scripts\python.exe scripts/workflow.py search --out "output\episode" --query "顶层目标"
+# 提取相关段落，再让Agent阅读该文件
+.\.venv\Scripts\python.exe scripts/workflow.py extract --out "output\episode" --start 00:55:00 --end 01:30:00 --dest "output\episode\选段.txt"
+```
+
+默认提取限额20000字符，超限会拒绝而不是截断。可以缩小范围，确需完整材料时提高 `--max-chars`。TXT边界按相邻时间戳近似，可能带入前一句。指定只转前90分钟时在 start 加 `--preview 5400`，范围改变须使用新目录。
+
+长稿默认先选章节或主题；明确要求全期笔记才完整分块阅读。已有笔记会复用。建议对Agent说：“启动这期本地转写，完成后我回来，只整理我指定的章节。”已有文字稿则说：“只整理这份稿子的55—90分钟，保留关键案例。”
+
 一个面向个人学习的 Agent Skill：公开小宇宙单集或本地音频 → 本地文字稿 → 有时间戳依据的学习笔记。可继续追问案例、讨论观点，或按需生成文章。
 
 音频识别在本地运行；学习笔记由你正在使用的 AI Agent 生成。在线 Agent 阅读文字时，文字会提交给相应服务，所以整个学习流程不等于完全离线。无需额外配置转写 API Key。
@@ -20,7 +39,7 @@ python -m venv .venv
 
 对 Agent 说：“用 podcast-study 整理这期播客的学习笔记”，附单集链接或本地音频。已有文字稿也能直接整理，不必重跑识别。
 
-也可以手动执行：
+也可以手动在前台执行以下命令（Agent默认使用上面的独立运行方式）：
 
 ```powershell
 # 本地文件，先试转一分钟；试转使用独立输出目录
@@ -37,7 +56,7 @@ python -m venv .venv
 
 ## 产物
 
-每期目录包含原始 TXT、带时间戳 SRT、逐段 JSON 检查点、质量疑点、处理记录和日志。脚本不会自动写学习笔记；Agent 通读文本后才生成 `学习笔记.md`，明确区分主讲内容、AI 解读、用户想法。文章是可选产物，可配合 orange2ai 的 podcast-to-article Skill。
+每期目录包含原始 TXT、带时间戳 SRT、逐段 JSON 检查点、质量疑点、处理记录和日志；后台模式另有 job.json 和 background.log。脚本不会自动写学习笔记；Agent 通读所选范围后才生成笔记，注明范围并区分主讲、AI解读与用户想法。文章是可选产物，可配合 orange2ai 的 podcast-to-article Skill。
 
 ## 已知限制
 
